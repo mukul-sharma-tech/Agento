@@ -6,3 +6,15 @@ faiss-cpu
 pypdf
 python-dotenv
 streamlit-audiorecorder
+streamlit
+pymongo
+python-dotenv
+bcrypt
+langchain
+langchain-community
+langchain-google-genai
+langchain-huggingface
+faiss-cpu
+PyPDF2              <-- ADD THIS LINE
+SpeechRecognition
+gTTS
