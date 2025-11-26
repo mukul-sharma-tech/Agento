@@ -15,6 +15,6 @@ langchain-community
 langchain-google-genai
 langchain-huggingface
 faiss-cpu
-PyPDF2              <-- ADD THIS LINE
+PyPDF2           
 SpeechRecognition
 gTTS
