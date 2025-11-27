@@ -22,6 +22,17 @@ from gtts import gTTS
 import speech_recognition as sr
 from io import BytesIO
 
+# --- URL MAPPINGS ---
+PAGE_TO_URL = {
+    "employee_workspace": "agento",
+    "ai_call_mode": "call-mode",
+    "admin_dashboard": "dashboard",
+    "user_profile": "profile",
+    "auth": "login"
+}
+URL_TO_PAGE = {v: k for k, v in PAGE_TO_URL.items()}
+
+
 # --- CONFIGURATION ---
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
@@ -199,6 +210,8 @@ def get_db():
 
 # --- ROUTING HELPER ---
 def navigate_to(page):
+    url_path = PAGE_TO_URL.get(page, page)
+    st.query_params["page"] = url_path
     st.session_state.page = page
     st.rerun()
 
@@ -284,6 +297,67 @@ def chat_with_jarvis(user, query):
     return chain.invoke(query)
 
 # ==========================================
+# 共通 SIDEBAR
+# ==========================================
+def render_sidebar():
+    user = st.session_state.user
+    with st.sidebar:
+        st.title(f"🏢 {user['company_name']}")
+        st.markdown(f"**Agent:** {user['email']}")
+        st.markdown(f"**Workspace ID:** `{user['company_id']}`")
+        st.markdown(f"**Role:** {user['role'].capitalize()}")
+        st.markdown("---")
+
+        # Define all possible pages and their icons/labels
+        pages = {
+            "employee_workspace": {"label": "Go to Chat", "icon": "💬"},
+            "ai_call_mode": {"label": "AI Call Mode", "icon": "📞"},
+            "admin_dashboard": {"label": "Admin Dashboard", "icon": "📊", "admin_only": True},
+            "user_profile": {"label": "User Profile", "icon": "👤"}
+        }
+
+        for page_id, page_info in pages.items():
+            # Skip admin pages for non-admin users
+            if page_info.get("admin_only") and user['role'] != 'admin':
+                continue
+            
+            # Don't show a button for the current page
+            if st.session_state.get('page') != page_id:
+                if st.button(page_info["label"], use_container_width=True):
+                    navigate_to(page_id)
+
+        st.markdown("---")
+
+        # Logout button at the bottom
+        if st.button("Logout", use_container_width=True):
+            # Clear session state completely on logout
+            for key in st.session_state.keys():
+                del st.session_state[key]
+            # Set page to auth to trigger rerun to login page
+            st.session_state.page = "auth"
+            st.query_params.clear()
+            st.rerun()
+
+
+# ==========================================
+# 📄 PAGE 0: LANDING (for logged-in users)
+# ==========================================
+def page_landing():
+    col1, col2, col3 = st.columns([1,2,1])
+    with col2:
+        st.markdown("<h1 style='text-align: center; margin-top: 50px;'>Welcome Back!</h1>", unsafe_allow_html=True)
+        st.markdown("---")
+        st.markdown("<p style='text-align: center;'>You are already logged in. You can proceed to your workspace or log out.</p>", unsafe_allow_html=True)
+        
+        if st.button("Go to your AI Agent", use_container_width=True):
+            navigate_to("employee_workspace")
+            
+        if st.button("Logout", use_container_width=True):
+            st.session_state.auth_status = False
+            st.session_state.page = "auth"
+            st.rerun()
+
+# ==========================================
 # 📄 PAGE 1: AUTHENTICATION PORTAL
 # ==========================================
 def page_auth(db):
@@ -328,17 +402,7 @@ def page_auth(db):
 # ==========================================
 def page_admin_dashboard(db):
     user = st.session_state.user
-    with st.sidebar:
-        st.title(f"{user['company_name']}")
-        st.markdown(f"**Workspace ID:** `{user['company_id']}`")
-        st.markdown(f"**Role:** Admin")
-        
-        if st.button("Go to Chat"): navigate_to("employee_workspace")
-        if st.button("Logout"): 
-            st.session_state.auth_status = False
-            st.session_state.page = "auth"
-            st.rerun()
-
+    render_sidebar()
     st.title("Company Command Center")
     
     # --- Stats Row ---
@@ -391,19 +455,7 @@ def page_admin_dashboard(db):
 # ==========================================
 def page_employee_workspace(db):
     user = st.session_state.user
-    with st.sidebar:
-        st.title(f"{user['company_name']}")
-        st.markdown(f"**User:** {user['email']}")
-        
-        if user["role"] == "admin":
-            if st.button("Admin Dashboard"): navigate_to("admin_dashboard")
-        
-        if st.button("AI Call Mode"): navigate_to("ai_call_mode")
-
-        if st.button("Logout"):
-            st.session_state.auth_status = False
-            st.session_state.page = "auth"
-            st.rerun()
+    render_sidebar()
 
     col1, col2 = st.columns([5, 1])
     with col1:
@@ -472,6 +524,7 @@ def transcribe_audio(audio_bytes):
 # ==========================================
 def page_ai_call_mode(db):
     user = st.session_state.user
+    render_sidebar()
     
     # --- CSS FOR IMMERSIVE LAYOUT ---
     st.markdown("""
@@ -483,18 +536,6 @@ def page_ai_call_mode(db):
         audio { display: none !important; }
     </style>
     """, unsafe_allow_html=True)
-
-    # --- SIDEBAR ---
-    with st.sidebar:
-        st.title(f"🏢 {user['company_name']}")
-        st.markdown(f"**Agent:** {user['email']}")
-        st.markdown("---")
-        if st.button("💬 Switch to Chat Mode", use_container_width=True): 
-            navigate_to("employee_workspace")
-        if st.button("🔒 End Session", use_container_width=True):
-            st.session_state.auth_status = False
-            st.session_state.page = "auth"
-            st.rerun()
 
     # --- MAIN VISUALS (THE AVATAR) ---
     # Using columns to perfectly center the big GIF
@@ -554,31 +595,56 @@ def page_ai_call_mode(db):
         st.session_state.processing_voice = False
 
 
+def page_user_profile(db):
+    render_sidebar()
+    st.markdown("<h1 style='text-align: center;'>User Profile</h1>", unsafe_allow_html=True)
+
 # ==========================================
 # 🚦 MAIN ROUTER (FIXED)
 # ==========================================
 def main():
     db = get_db()
-    
-    # --- THE FIX IS HERE ---
     if db is None:
         st.error("Database Connection Failed. Please check your MONGO_URI in .env file.")
         return
 
-    # Apply theme at the very beginning
     st.markdown(get_theme_css(), unsafe_allow_html=True)
 
+    # --- ROUTING LOGIC ---
+    query_params = st.query_params.to_dict()
+    page_in_url = query_params.get("page")
+
     if not st.session_state.auth_status:
+        # If not logged in, always show auth page.
         page_auth(db)
     else:
-        if st.session_state.page == "admin_dashboard":
-            page_admin_dashboard(db)
-        elif st.session_state.page == "employee_workspace":
-            page_employee_workspace(db)
-        elif st.session_state.page == "ai_call_mode":
-            page_ai_call_mode(db)
+        # If logged in...
+        if page_in_url:
+            page_to_render = URL_TO_PAGE.get(page_in_url)
         else:
-            page_auth(db)
+            # If at the root URL (no page in query param), show the landing page.
+            page_to_render = 'landing'
+        
+        # Fallback for invalid page names in URL
+        if not page_to_render:
+            page_to_render = 'landing'
+
+        # Render the determined page
+        if page_to_render == 'landing':
+            page_landing()
+        elif page_to_render == 'auth': # Logged-in user trying to access login page
+            page_landing()
+        elif page_to_render == 'admin_dashboard' and st.session_state.user.get('role') == 'admin':
+            page_admin_dashboard(db)
+        elif page_to_render == 'employee_workspace':
+            page_employee_workspace(db)
+        elif page_to_render == 'ai_call_mode':
+            page_ai_call_mode(db)
+        elif page_to_render == 'user_profile':
+            page_user_profile(db)
+        else:
+            # Default/fallback page for authenticated users
+            page_landing()
 
 if __name__ == "__main__":
     main()
