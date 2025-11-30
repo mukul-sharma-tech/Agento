@@ -12,3 +12,4 @@ langchain-qdrant
 PyPDF2
 SpeechRecognition
 gTTS
+mutagen
