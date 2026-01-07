@@ -1114,28 +1114,11 @@ def autoplay_audio(audio_bytes):
 #             st.session_state.page = "auth"
 #             st.query_params.clear()
 #             st.rerun()
-
 def render_sidebar():
     user = st.session_state.user
     
-    # Add custom CSS to fix the sidebar toggle icon
-    st.markdown("""
-        <style>
-        /* Hide the default toggle text and replace with hamburger icon */
-        [data-testid="collapsedControl"] {
-            color: transparent !important;
-        }
-        [data-testid="collapsedControl"]::before {
-            content: "☰";
-            color: inherit;
-            font-size: 1.5rem;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-        }
-        </style>
-    """, unsafe_allow_html=True)
+    # Directly add hamburger menu at the top
+    st.markdown("# ☰")
     
     with st.sidebar:
         st.title(f"🏢 {user['company_name']}")
@@ -1163,7 +1146,6 @@ def render_sidebar():
             st.session_state.page = "auth"
             st.query_params.clear()
             st.rerun()
-
 
 # --- PAGES ---
 def page_landing():
