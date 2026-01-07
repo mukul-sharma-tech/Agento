@@ -728,8 +728,6 @@ def get_theme_css():
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 
     <style>
         @keyframes gradientAnimation {{
@@ -745,19 +743,23 @@ def get_theme_css():
             --card-background-color: {theme['--card-background-color']};
         }}
 
-        /* Apply Poppins ONLY to text, not icons */
-        html, body, [class*="st-"]:not(.material-icons):not(.material-symbols-outlined) {{
+        /* ✅ FONT ONLY FOR TEXT ELEMENTS */
+        .stApp p,
+        .stApp span,
+        .stApp label,
+        .stApp input,
+        .stApp textarea,
+        .stApp button,
+        .stApp select,
+        .stMarkdown,
+        .stText {{
             font-family: 'Poppins', sans-serif;
             color: var(--primary-text-color);
         }}
 
-        /* Force icon fonts */
-        .material-icons {{
-            font-family: 'Material Icons' !important;
-        }}
-
-        .material-symbols-outlined {{
-            font-family: 'Material Symbols Outlined' !important;
+        /* ✅ NEVER TOUCH ICONS / SVGs */
+        svg {{
+            font-family: initial !important;
         }}
 
         .main {{
@@ -770,14 +772,12 @@ def get_theme_css():
             animation: gradientAnimation 15s ease infinite;
         }}
 
-        /* Sidebar */
         [data-testid="stSidebar"] {{
             background-color: var(--card-background-color);
             backdrop-filter: blur(10px);
             border-right: 1px solid {theme['--border-color']};
         }}
 
-        /* Buttons */
         .stButton > button {{
             border: 1px solid var(--accent-color);
             background-color: transparent;
@@ -791,7 +791,6 @@ def get_theme_css():
             box-shadow: 0 0 15px {theme['--glow-color']};
         }}
 
-        /* Inputs */
         .stTextInput input,
         .stSelectbox div {{
             background-color: var(--card-background-color);
@@ -800,7 +799,6 @@ def get_theme_css():
             border-radius: 8px;
         }}
 
-        /* Chat messages */
         [data-testid="stChatMessage"] {{
             background: var(--card-background-color);
             border: 1px solid {theme['--border-color']};
