@@ -661,51 +661,6 @@ if "audio_key" not in st.session_state: st.session_state.audio_key = 0
 if "active_diagram" not in st.session_state: st.session_state.active_diagram = None
 
 # --- STYLING ---
-# def get_theme_css():
-#     themes = {
-#         "dark": {
-#             "--background-color": "#161B22",
-#             "--bg-gradient-start": "#0D1117",
-#             "--bg-gradient-end": "#161B22",
-#             "--primary-text-color": "#E6EDF3",
-#             "--secondary-text-color": "#8B949E",
-#             "--accent-color": "#58A6FF",
-#             "--accent-color-hover": "#79C0FF",
-#             "--card-background-color": "rgba(33, 39, 48, 0.7)",
-#             "--border-color": "rgba(139, 148, 158, 0.3)",
-#             "--glow-color": "rgba(88, 166, 255, 0.5)"
-#         },
-#     }
-#     theme = themes[st.session_state.theme]
-    
-#     return f"""
-#     <link rel="preconnect" href="https://fonts.googleapis.com">
-#     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-#     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-#     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-#     <style>
-#         @keyframes gradientAnimation {{ 0% {{ background-position: 0% 50%; }} 50% {{ background-position: 100% 50%; }} 100% {{ background-position: 0% 50%; }} }}
-#         :root {{ --background-color: {theme['--background-color']}; --primary-text-color: {theme['--primary-text-color']}; --accent-color: {theme['--accent-color']}; --card-background-color: {theme['--card-background-color']}; }}
-#         html, body, [class*="st-"]:not(.material-icons):not(.material-symbols-outlined) {{
-#             font-family: 'Poppins', sans-serif;
-#             color: var(--primary-text-color);
-#         }}
-#         .main {{ background: linear-gradient(-45deg, {theme['--bg-gradient-start']}, {theme['--bg-gradient-end']}); background-size: 400% 400%; animation: gradientAnimation 15s ease infinite; }}
-        
-#         /* SIDEBAR STYLING */
-#         [data-testid="stSidebar"] {{ 
-#             background-color: var(--card-background-color); 
-#             backdrop-filter: blur(10px); 
-#             border-right: 1px solid {theme['--border-color']}; 
-#         }}
-        
-#         .stButton > button {{ border: 1px solid var(--accent-color); background-color: transparent; color: var(--accent-color) !important; border-radius: 8px; }}
-#         .stButton > button:hover {{ background-color: var(--accent-color); color: white !important; box-shadow: 0 0 15px {theme['--glow-color']}; }}
-#         .stTextInput > div > div > input, .stSelectbox > div > div {{ background-color: var(--card-background-color); color: var(--primary-text-color); border: 1px solid {theme['--border-color']}; border-radius: 8px; }}
-#         [data-testid="stChatMessage"] {{ background: var(--card-background-color); border: 1px solid {theme['--border-color']}; border-radius: 12px; }}
-#     </style>
-#     """
-
 def get_theme_css():
     themes = {
         "dark": {
@@ -718,95 +673,38 @@ def get_theme_css():
             "--accent-color-hover": "#79C0FF",
             "--card-background-color": "rgba(33, 39, 48, 0.7)",
             "--border-color": "rgba(139, 148, 158, 0.3)",
-            "--glow-color": "rgba(88, 166, 255, 0.5)",
-        }
+            "--glow-color": "rgba(88, 166, 255, 0.5)"
+        },
     }
-
     theme = themes[st.session_state.theme]
-
+    
     return f"""
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
     <style>
-        @keyframes gradientAnimation {{
-            0% {{ background-position: 0% 50%; }}
-            50% {{ background-position: 100% 50%; }}
-            100% {{ background-position: 0% 50%; }}
-        }}
-
-        :root {{
-            --background-color: {theme['--background-color']};
-            --primary-text-color: {theme['--primary-text-color']};
-            --accent-color: {theme['--accent-color']};
-            --card-background-color: {theme['--card-background-color']};
-        }}
-
-        /* ✅ FONT ONLY FOR TEXT ELEMENTS */
-        .stApp p,
-        .stApp span,
-        .stApp label,
-        .stApp input,
-        .stApp textarea,
-        .stApp button,
-        .stApp select,
-        .stMarkdown,
-        .stText {{
+        @keyframes gradientAnimation {{ 0% {{ background-position: 0% 50%; }} 50% {{ background-position: 100% 50%; }} 100% {{ background-position: 0% 50%; }} }}
+        :root {{ --background-color: {theme['--background-color']}; --primary-text-color: {theme['--primary-text-color']}; --accent-color: {theme['--accent-color']}; --card-background-color: {theme['--card-background-color']}; }}
+        html, body, [class*="st-"]:not(.material-icons):not(.material-symbols-outlined) {{
             font-family: 'Poppins', sans-serif;
             color: var(--primary-text-color);
         }}
-
-        /* ✅ NEVER TOUCH ICONS / SVGs */
-        svg {{
-            font-family: initial !important;
+        .main {{ background: linear-gradient(-45deg, {theme['--bg-gradient-start']}, {theme['--bg-gradient-end']}); background-size: 400% 400%; animation: gradientAnimation 15s ease infinite; }}
+        
+        /* SIDEBAR STYLING */
+        [data-testid="stSidebar"] {{ 
+            background-color: var(--card-background-color); 
+            backdrop-filter: blur(10px); 
+            border-right: 1px solid {theme['--border-color']}; 
         }}
-
-        .main {{
-            background: linear-gradient(
-                -45deg,
-                {theme['--bg-gradient-start']},
-                {theme['--bg-gradient-end']}
-            );
-            background-size: 400% 400%;
-            animation: gradientAnimation 15s ease infinite;
-        }}
-
-        [data-testid="stSidebar"] {{
-            background-color: var(--card-background-color);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid {theme['--border-color']};
-        }}
-
-        .stButton > button {{
-            border: 1px solid var(--accent-color);
-            background-color: transparent;
-            color: var(--accent-color) !important;
-            border-radius: 8px;
-        }}
-
-        .stButton > button:hover {{
-            background-color: var(--accent-color);
-            color: white !important;
-            box-shadow: 0 0 15px {theme['--glow-color']};
-        }}
-
-        .stTextInput input,
-        .stSelectbox div {{
-            background-color: var(--card-background-color);
-            color: var(--primary-text-color);
-            border: 1px solid {theme['--border-color']};
-            border-radius: 8px;
-        }}
-
-        [data-testid="stChatMessage"] {{
-            background: var(--card-background-color);
-            border: 1px solid {theme['--border-color']};
-            border-radius: 12px;
-        }}
+        
+        .stButton > button {{ border: 1px solid var(--accent-color); background-color: transparent; color: var(--accent-color) !important; border-radius: 8px; }}
+        .stButton > button:hover {{ background-color: var(--accent-color); color: white !important; box-shadow: 0 0 15px {theme['--glow-color']}; }}
+        .stTextInput > div > div > input, .stSelectbox > div > div {{ background-color: var(--card-background-color); color: var(--primary-text-color); border: 1px solid {theme['--border-color']}; border-radius: 8px; }}
+        [data-testid="stChatMessage"] {{ background: var(--card-background-color); border: 1px solid {theme['--border-color']}; border-radius: 12px; }}
     </style>
     """
-
 
 # --- DATABASE CONNECTION LOGIC ---
 def sanitize_mongo_uri(uri: str):
@@ -1294,25 +1192,71 @@ def page_admin_dashboard(db):
         docs = list(db["documents"].find({"company_id": user["company_id"]}, {"_id":0, "filename":1, "category":1, "upload_date":1}).sort("upload_date", -1).limit(10))
         if docs: st.dataframe(pd.DataFrame(docs), use_container_width=True)
 
+# def page_employee_workspace(db):
+#     user = st.session_state.user
+#     render_sidebar()
+#     col1, col2 = st.columns([5, 1])
+#     with col1: st.markdown("<h1 style='padding-top: 20px;'>AGENTO AI Assistant</h1>", unsafe_allow_html=True)
+#     with col2: st.image("public/globe.gif")
+#     if "messages" not in st.session_state: st.session_state.messages = []
+#     for msg in st.session_state.messages:
+#         with st.chat_message(msg["role"]): 
+#             if msg["role"] == "assistant": parse_and_display_response(msg["content"])
+#             else: st.markdown(msg["content"])
+#     if prompt := st.chat_input("How can I help you?"):
+#         st.chat_message("user").markdown(prompt)
+#         st.session_state.messages.append({"role": "user", "content": prompt})
+#         with st.spinner("Thinking..."):
+#             response = chat_with_jarvis(user, prompt)
+#         with st.chat_message("assistant"): parse_and_display_response(response)
+#         st.session_state.messages.append({"role": "assistant", "content": response})
+#         db["chat_history"].insert_one({"company_id": user["company_id"], "user": user["email"], "query": prompt, "response": response, "timestamp": datetime.datetime.now()})
+
 def page_employee_workspace(db):
     user = st.session_state.user
     render_sidebar()
+    
     col1, col2 = st.columns([5, 1])
-    with col1: st.markdown("<h1 style='padding-top: 20px;'>AGENTO AI Assistant</h1>", unsafe_allow_html=True)
-    with col2: st.image("public/globe.gif")
-    if "messages" not in st.session_state: st.session_state.messages = []
+    with col1:
+        st.markdown("<div class='section-title'>🤖 AGENTO AI Assistant</div>", unsafe_allow_html=True)
+    with col2:
+        st.image("public/globe.gif")
+    
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+    
+    # FIX: Use proper emojis instead of shortcodes
     for msg in st.session_state.messages:
-        with st.chat_message(msg["role"]): 
-            if msg["role"] == "assistant": parse_and_display_response(msg["content"])
-            else: st.markdown(msg["content"])
+        # Use different avatars for user vs assistant
+        avatar = "👤" if msg["role"] == "user" else "🤖"
+        with st.chat_message(msg["role"], avatar=avatar):
+            if msg["role"] == "assistant":
+                parse_and_display_response(msg["content"])
+            else:
+                st.markdown(msg["content"])
+    
     if prompt := st.chat_input("How can I help you?"):
-        st.chat_message("user").markdown(prompt)
+        # User message with avatar
+        with st.chat_message("user", avatar="👤"):
+            st.markdown(prompt)
         st.session_state.messages.append({"role": "user", "content": prompt})
+        
         with st.spinner("Thinking..."):
             response = chat_with_jarvis(user, prompt)
-        with st.chat_message("assistant"): parse_and_display_response(response)
+        
+        # Assistant message with avatar
+        with st.chat_message("assistant", avatar="🤖"):
+            parse_and_display_response(response)
+        
         st.session_state.messages.append({"role": "assistant", "content": response})
-        db["chat_history"].insert_one({"company_id": user["company_id"], "user": user["email"], "query": prompt, "response": response, "timestamp": datetime.datetime.now()})
+        db["chat_history"].insert_one({
+            "company_id": user["company_id"],
+            "user": user["email"],
+            "query": prompt,
+            "response": response,
+            "timestamp": datetime.datetime.now()
+        })
+
 
 # ==========================================
 # 📞 PAGE: AI CALL MODE (Fixed Layout)
