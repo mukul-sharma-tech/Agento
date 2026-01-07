@@ -661,6 +661,51 @@ if "audio_key" not in st.session_state: st.session_state.audio_key = 0
 if "active_diagram" not in st.session_state: st.session_state.active_diagram = None
 
 # --- STYLING ---
+# def get_theme_css():
+#     themes = {
+#         "dark": {
+#             "--background-color": "#161B22",
+#             "--bg-gradient-start": "#0D1117",
+#             "--bg-gradient-end": "#161B22",
+#             "--primary-text-color": "#E6EDF3",
+#             "--secondary-text-color": "#8B949E",
+#             "--accent-color": "#58A6FF",
+#             "--accent-color-hover": "#79C0FF",
+#             "--card-background-color": "rgba(33, 39, 48, 0.7)",
+#             "--border-color": "rgba(139, 148, 158, 0.3)",
+#             "--glow-color": "rgba(88, 166, 255, 0.5)"
+#         },
+#     }
+#     theme = themes[st.session_state.theme]
+    
+#     return f"""
+#     <link rel="preconnect" href="https://fonts.googleapis.com">
+#     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+#     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+#     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+#     <style>
+#         @keyframes gradientAnimation {{ 0% {{ background-position: 0% 50%; }} 50% {{ background-position: 100% 50%; }} 100% {{ background-position: 0% 50%; }} }}
+#         :root {{ --background-color: {theme['--background-color']}; --primary-text-color: {theme['--primary-text-color']}; --accent-color: {theme['--accent-color']}; --card-background-color: {theme['--card-background-color']}; }}
+#         html, body, [class*="st-"]:not(.material-icons):not(.material-symbols-outlined) {{
+#             font-family: 'Poppins', sans-serif;
+#             color: var(--primary-text-color);
+#         }}
+#         .main {{ background: linear-gradient(-45deg, {theme['--bg-gradient-start']}, {theme['--bg-gradient-end']}); background-size: 400% 400%; animation: gradientAnimation 15s ease infinite; }}
+        
+#         /* SIDEBAR STYLING */
+#         [data-testid="stSidebar"] {{ 
+#             background-color: var(--card-background-color); 
+#             backdrop-filter: blur(10px); 
+#             border-right: 1px solid {theme['--border-color']}; 
+#         }}
+        
+#         .stButton > button {{ border: 1px solid var(--accent-color); background-color: transparent; color: var(--accent-color) !important; border-radius: 8px; }}
+#         .stButton > button:hover {{ background-color: var(--accent-color); color: white !important; box-shadow: 0 0 15px {theme['--glow-color']}; }}
+#         .stTextInput > div > div > input, .stSelectbox > div > div {{ background-color: var(--card-background-color); color: var(--primary-text-color); border: 1px solid {theme['--border-color']}; border-radius: 8px; }}
+#         [data-testid="stChatMessage"] {{ background: var(--card-background-color); border: 1px solid {theme['--border-color']}; border-radius: 12px; }}
+#     </style>
+#     """
+
 def get_theme_css():
     themes = {
         "dark": {
@@ -673,38 +718,97 @@ def get_theme_css():
             "--accent-color-hover": "#79C0FF",
             "--card-background-color": "rgba(33, 39, 48, 0.7)",
             "--border-color": "rgba(139, 148, 158, 0.3)",
-            "--glow-color": "rgba(88, 166, 255, 0.5)"
-        },
+            "--glow-color": "rgba(88, 166, 255, 0.5)",
+        }
     }
+
     theme = themes[st.session_state.theme]
-    
+
     return f"""
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
     <style>
-        @keyframes gradientAnimation {{ 0% {{ background-position: 0% 50%; }} 50% {{ background-position: 100% 50%; }} 100% {{ background-position: 0% 50%; }} }}
-        :root {{ --background-color: {theme['--background-color']}; --primary-text-color: {theme['--primary-text-color']}; --accent-color: {theme['--accent-color']}; --card-background-color: {theme['--card-background-color']}; }}
+        @keyframes gradientAnimation {{
+            0% {{ background-position: 0% 50%; }}
+            50% {{ background-position: 100% 50%; }}
+            100% {{ background-position: 0% 50%; }}
+        }}
+
+        :root {{
+            --background-color: {theme['--background-color']};
+            --primary-text-color: {theme['--primary-text-color']};
+            --accent-color: {theme['--accent-color']};
+            --card-background-color: {theme['--card-background-color']};
+        }}
+
+        /* Apply Poppins ONLY to text, not icons */
         html, body, [class*="st-"]:not(.material-icons):not(.material-symbols-outlined) {{
             font-family: 'Poppins', sans-serif;
             color: var(--primary-text-color);
         }}
-        .main {{ background: linear-gradient(-45deg, {theme['--bg-gradient-start']}, {theme['--bg-gradient-end']}); background-size: 400% 400%; animation: gradientAnimation 15s ease infinite; }}
-        
-        /* SIDEBAR STYLING */
-        [data-testid="stSidebar"] {{ 
-            background-color: var(--card-background-color); 
-            backdrop-filter: blur(10px); 
-            border-right: 1px solid {theme['--border-color']}; 
+
+        /* Force icon fonts */
+        .material-icons {{
+            font-family: 'Material Icons' !important;
         }}
-        
-        .stButton > button {{ border: 1px solid var(--accent-color); background-color: transparent; color: var(--accent-color) !important; border-radius: 8px; }}
-        .stButton > button:hover {{ background-color: var(--accent-color); color: white !important; box-shadow: 0 0 15px {theme['--glow-color']}; }}
-        .stTextInput > div > div > input, .stSelectbox > div > div {{ background-color: var(--card-background-color); color: var(--primary-text-color); border: 1px solid {theme['--border-color']}; border-radius: 8px; }}
-        [data-testid="stChatMessage"] {{ background: var(--card-background-color); border: 1px solid {theme['--border-color']}; border-radius: 12px; }}
+
+        .material-symbols-outlined {{
+            font-family: 'Material Symbols Outlined' !important;
+        }}
+
+        .main {{
+            background: linear-gradient(
+                -45deg,
+                {theme['--bg-gradient-start']},
+                {theme['--bg-gradient-end']}
+            );
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+        }}
+
+        /* Sidebar */
+        [data-testid="stSidebar"] {{
+            background-color: var(--card-background-color);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid {theme['--border-color']};
+        }}
+
+        /* Buttons */
+        .stButton > button {{
+            border: 1px solid var(--accent-color);
+            background-color: transparent;
+            color: var(--accent-color) !important;
+            border-radius: 8px;
+        }}
+
+        .stButton > button:hover {{
+            background-color: var(--accent-color);
+            color: white !important;
+            box-shadow: 0 0 15px {theme['--glow-color']};
+        }}
+
+        /* Inputs */
+        .stTextInput input,
+        .stSelectbox div {{
+            background-color: var(--card-background-color);
+            color: var(--primary-text-color);
+            border: 1px solid {theme['--border-color']};
+            border-radius: 8px;
+        }}
+
+        /* Chat messages */
+        [data-testid="stChatMessage"] {{
+            background: var(--card-background-color);
+            border: 1px solid {theme['--border-color']};
+            border-radius: 12px;
+        }}
     </style>
     """
+
 
 # --- DATABASE CONNECTION LOGIC ---
 def sanitize_mongo_uri(uri: str):
