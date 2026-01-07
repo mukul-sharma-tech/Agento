@@ -1092,28 +1092,76 @@ def autoplay_audio(audio_bytes):
     st.markdown(md, unsafe_allow_html=True)
 
 # --- SIDEBAR ---
+# def render_sidebar():
+#     user = st.session_state.user
+#     with st.sidebar:
+#         st.title(f"🏢 {user['company_name']}")
+#         st.markdown(f"**Agent:** {user['email']}")
+#         st.markdown("---")
+#         pages = {
+#             "employee_workspace": {"label": "Go to Chat", "icon": "💬"},
+#             "ai_call_mode": {"label": "AI Call Mode", "icon": "📞"},
+#             "admin_dashboard": {"label": "Admin Dashboard", "icon": "📊", "admin_only": True},
+#             "user_profile": {"label": "User Profile", "icon": "👤"}
+#         }
+#         for page_id, page_info in pages.items():
+#             if page_info.get("admin_only") and user['role'] != 'admin': continue
+#             if st.session_state.get('page') != page_id:
+#                 if st.button(page_info["label"], use_container_width=True): navigate_to(page_id)
+#         st.markdown("---")
+#         if st.button("Logout", use_container_width=True):
+#             for key in st.session_state.keys(): del st.session_state[key]
+#             st.session_state.page = "auth"
+#             st.query_params.clear()
+#             st.rerun()
+
+
 def render_sidebar():
     user = st.session_state.user
+    
     with st.sidebar:
         st.title(f"🏢 {user['company_name']}")
         st.markdown(f"**Agent:** {user['email']}")
         st.markdown("---")
+        
+        # FIX: Use Unicode emojis directly
         pages = {
-            "employee_workspace": {"label": "Go to Chat", "icon": "💬"},
-            "ai_call_mode": {"label": "AI Call Mode", "icon": "📞"},
-            "admin_dashboard": {"label": "Admin Dashboard", "icon": "📊", "admin_only": True},
-            "user_profile": {"label": "User Profile", "icon": "👤"}
+            "employee_workspace": {"label": "💬 Go to Chat", "icon": "💬"},
+            "ai_call_mode": {"label": "📞 AI Call Mode", "icon": "📞"},
+            "admin_dashboard": {"label": "📊 Admin Dashboard", "icon": "📊", "admin_only": True},
+            "user_profile": {"label": "👤 User Profile", "icon": "👤"}
         }
+        
         for page_id, page_info in pages.items():
-            if page_info.get("admin_only") and user['role'] != 'admin': continue
-            if st.session_state.get('page') != page_id:
-                if st.button(page_info["label"], use_container_width=True): navigate_to(page_id)
+            if page_info.get("admin_only") and user['role'] != 'admin':
+                continue
+            
+            # Show selected state
+            is_current = st.session_state.get('page') == page_id
+            
+            if is_current:
+                # Highlight current page - no arrow text, just highlighting
+                st.markdown(f"""
+                    <div style='background: linear-gradient(90deg, #58A6FF 0%, rgba(88, 166, 255, 0.2) 100%); 
+                                padding: 10px; 
+                                border-radius: 8px; 
+                                margin-bottom: 8px;
+                                border-left: 4px solid #58A6FF;'>
+                        <span style='color: white; font-weight: 600;'>{page_info["label"]}</span>
+                    </div>
+                """, unsafe_allow_html=True)
+            else:
+                if st.button(page_info["label"], use_container_width=True, key=f"nav_{page_id}"):
+                    navigate_to(page_id)
+        
         st.markdown("---")
-        if st.button("Logout", use_container_width=True):
-            for key in st.session_state.keys(): del st.session_state[key]
+        if st.button("🚪 Logout", use_container_width=True):
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
             st.session_state.page = "auth"
             st.query_params.clear()
             st.rerun()
+
 
 # --- PAGES ---
 def page_landing():
