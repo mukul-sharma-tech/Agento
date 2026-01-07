@@ -685,7 +685,10 @@ def get_theme_css():
     <style>
         @keyframes gradientAnimation {{ 0% {{ background-position: 0% 50%; }} 50% {{ background-position: 100% 50%; }} 100% {{ background-position: 0% 50%; }} }}
         :root {{ --background-color: {theme['--background-color']}; --primary-text-color: {theme['--primary-text-color']}; --accent-color: {theme['--accent-color']}; --card-background-color: {theme['--card-background-color']}; }}
-        html, body, [class*="st-"]:not(.material-icons):not(.material-symbols-outlined) {font-family: 'Poppins', sans-serif; color: var(--primary-text-color);}
+        html, body, [class*="st-"]:not(.material-icons):not(.material-symbols-outlined) {{
+            font-family: 'Poppins', sans-serif;
+            color: var(--primary-text-color);
+        }}
         .main {{ background: linear-gradient(-45deg, {theme['--bg-gradient-start']}, {theme['--bg-gradient-end']}); background-size: 400% 400%; animation: gradientAnimation 15s ease infinite; }}
         
         /* SIDEBAR STYLING */
