@@ -1217,8 +1217,8 @@ def page_employee_workspace(db):
     render_sidebar()
     
     col1, col2 = st.columns([5, 1])
-    with col1:
-        st.markdown("<h1 style='padding-top: 20px;>AGENTO AI Assistant</h1>", unsafe_allow_html=True)
+    with col1: 
+        st.markdown("<h1 style='padding-top: 20px;'>AGENTO AI Assistant</h1>", unsafe_allow_html=True)
     with col2:
         st.image("public/globe.gif")
     
