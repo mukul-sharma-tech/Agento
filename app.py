@@ -1092,28 +1092,78 @@ def autoplay_audio(audio_bytes):
     st.markdown(md, unsafe_allow_html=True)
 
 # --- SIDEBAR ---
+# def render_sidebar():
+#     user = st.session_state.user
+#     with st.sidebar:
+#         st.title(f"🏢 {user['company_name']}")
+#         st.markdown(f"**Agent:** {user['email']}")
+#         st.markdown("---")
+#         pages = {
+#             "employee_workspace": {"label": "Go to Chat", "icon": "💬"},
+#             "ai_call_mode": {"label": "AI Call Mode", "icon": "📞"},
+#             "admin_dashboard": {"label": "Admin Dashboard", "icon": "📊", "admin_only": True},
+#             "user_profile": {"label": "User Profile", "icon": "👤"}
+#         }
+#         for page_id, page_info in pages.items():
+#             if page_info.get("admin_only") and user['role'] != 'admin': continue
+#             if st.session_state.get('page') != page_id:
+#                 if st.button(page_info["label"], use_container_width=True): navigate_to(page_id)
+#         st.markdown("---")
+#         if st.button("Logout", use_container_width=True):
+#             for key in st.session_state.keys(): del st.session_state[key]
+#             st.session_state.page = "auth"
+#             st.query_params.clear()
+#             st.rerun()
+
 def render_sidebar():
     user = st.session_state.user
+    
+    # Add custom CSS to fix the sidebar toggle icon
+    st.markdown("""
+        <style>
+        /* Hide the default toggle text and replace with hamburger icon */
+        [data-testid="collapsedControl"] {
+            color: transparent !important;
+        }
+        [data-testid="collapsedControl"]::before {
+            content: "☰";
+            color: inherit;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    
     with st.sidebar:
         st.title(f"🏢 {user['company_name']}")
         st.markdown(f"**Agent:** {user['email']}")
         st.markdown("---")
+        
         pages = {
             "employee_workspace": {"label": "Go to Chat", "icon": "💬"},
             "ai_call_mode": {"label": "AI Call Mode", "icon": "📞"},
             "admin_dashboard": {"label": "Admin Dashboard", "icon": "📊", "admin_only": True},
             "user_profile": {"label": "User Profile", "icon": "👤"}
         }
+        
         for page_id, page_info in pages.items():
-            if page_info.get("admin_only") and user['role'] != 'admin': continue
+            if page_info.get("admin_only") and user['role'] != 'admin': 
+                continue
             if st.session_state.get('page') != page_id:
-                if st.button(page_info["label"], use_container_width=True): navigate_to(page_id)
+                if st.button(f"{page_info['icon']} {page_info['label']}", use_container_width=True): 
+                    navigate_to(page_id)
+        
         st.markdown("---")
-        if st.button("Logout", use_container_width=True):
-            for key in st.session_state.keys(): del st.session_state[key]
+        if st.button("🚪 Logout", use_container_width=True):
+            for key in list(st.session_state.keys()): 
+                del st.session_state[key]
             st.session_state.page = "auth"
             st.query_params.clear()
             st.rerun()
+
 
 # --- PAGES ---
 def page_landing():
